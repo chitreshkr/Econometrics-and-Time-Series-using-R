@@ -1,0 +1,101 @@
+---
+title: "Assignment 4"
+author: "Chitresh Kumar"
+output:
+  word_document: default
+  html_document: default
+---
+
+```{r loadPackages, warning=FALSE, message=FALSE, results='hide' }
+#if(!require("pacman")) install.packages("pacman")
+pacman::p_load(tidyverse, reshape, gplots, RStata,haven)
+theme_set(theme_classic())
+options("RStata.StataPath")
+options("RStata.StataVersion" = 13)
+```
+```{r}
+getwd()
+```
+
+
+```{r}
+df<- read_dta(file = "cocaine.dta")
+df1 <- read_dta(file = "br2.dta")
+```
+
+
+```{r}
+head(df)
+head(df1)
+```
+
+```{r}
+lm1<- lm(df$price~ df$quant + df$qual + df$trend,data=df)
+summary(lm1)
+mean(df$price)
+
+```
+```{r}
+ggplot(df,aes(y=df$price,x=df$quant + df$qual + df$trend))+
+  geom_point()+
+  geom_hline(yintercept=90.84669)+
+  geom_smooth(method="lm")
+  
+```
+
+```{r}
+lm2<- lm(df1$price~ df1$sqft + df1$age ,data=df1)
+summary(lm2)
+mean(df$price)
+
+``` 
+
+
+```{r}
+ggplot(df1,aes(y=df1$price,x=df1$sqft + df1$age))+
+  geom_point()+
+  geom_hline(yintercept=-41947.696)+
+  geom_smooth(method="lm")
+  
+```
+
+
+
+
+
+
+
+```{r}
+lm2<- lm(df1$price~ df1$sqft + df1$age + df1$age*df1$age +df1$sqft*df1$sqft ,data=df1)
+summary(lm2)
+mean(df$price)
+
+``` 
+
+
+```{r}
+ggplot(df1,aes(y=df1$price,x=df1$sqft + df1$age + df1$age*df1$age +df1$sqft*df1$sqft))+
+  geom_point()+
+  geom_hline(yintercept=-41947.696)+
+  geom_smooth(method="lm")
+  
+```
+
+
+
+```{r}
+options(scipen = 999)
+lm2<- lm(df1$price~ df1$sqft + df1$age + poly(df1$age,2) +poly(df1$sqft,2) +df1$sqft*df1$age ,data=df1)
+summary(lm2)
+mean(df$price)
+
+```
+
+```{r}
+ggplot(df1,aes(y=df1$price,x=df1$sqft + df1$age + df1$age*df1$age +df1$sqft*df1$sqft +df1$sqft*df1$age))+
+  geom_point()+
+  geom_hline(yintercept=-41947.696)+
+  geom_smooth(method="lm")
+  
+```
+
