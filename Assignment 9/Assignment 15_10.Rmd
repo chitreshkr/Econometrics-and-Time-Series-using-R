@@ -1,0 +1,65 @@
+---
+title: "Assignment 15_10"
+author: "Sameer"
+date: "4/19/2020"
+output:
+  word_document: default
+  html_document: default
+---
+
+```{r loadPackages, warning=FALSE, message=FALSE, results='hide' }
+#if(!require("pacman")) install.packages("pacman")
+pacman::p_load(tidyverse, reshape, gplots, ggmap, RStata,haven,
+                data.table,margins,pastecs,MASS,lmtest,broom,car,stargazer,sandwich,knitr,plm)
+search()
+theme_set(theme_classic())
+```
+```{r}
+setwd('C:/UTD/Econometrics and Time Series Analysis/Assignments')
+crime<-read_dta('crime.dta')
+head(crime)
+```
+**PART b**
+```{r}
+lm1<-lm(lcrmrte~lprbarr+lprbconv+lprbpris+lavgsen+lwmfg,data=crime)
+summary(lm1)
+```
+**PART c**
+```{r}
+lm2a<-plm(lcrmrte~lprbarr+lprbconv+lprbpris+lavgsen+lwmfg,data=crime,model="within")
+summary(lm2a)
+mean(fixef(lm2a))
+```
+
+**PART e**
+#OLS
+```{r}
+lm3a<-lm(lcrmrte~lprbarr+lprbconv+lprbpris+lavgsen+lwmfg+ldensity+lpctymle+d82+d83+d84+d85+d86+d87,data=crime)
+summary(lm3a)
+```
+```{r}
+lm3b<-lm(lcrmrte~lprbarr+lprbconv+lprbpris+lavgsen+lwmfg+ldensity+lpctymle,data=crime)
+summary(lm3b)
+```
+
+```{r}
+anova(lm3a,lm3b)
+```
+
+
+#Fixed effect
+```{r}
+lm4a<-plm(lcrmrte~lprbarr+lprbconv+lprbpris+lavgsen+lwmfg+ldensity+lpctymle+d82+d83+d84+d85+d86+d87,data=crime,model='within')
+summary(lm4a)
+```
+
+
+```{r}
+lm4b<-plm(lcrmrte~lprbarr+lprbconv+lprbpris+lavgsen+lwmfg+ldensity+lpctymle,data=crime,model='within')
+summary(lm4b)
+```
+
+
+```{r}
+pFtest(lm4a,lm4b)
+```

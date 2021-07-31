@@ -1,0 +1,176 @@
+---
+title: "Assingment 8"
+author: "Chitresh Kumar"
+date: "4/12/2020"
+output:
+  word_document: default
+  html_document: default
+---
+
+```{r r loadPackages, warning=FALSE, message=FALSE, results='hide' }
+if(!require("pacman")) install.packages("pacman")
+pacman::p_load(tidyverse, reshape, gplots, ggmap, RStata,haven,
+                data.table,margins,pastecs,MASS,lmtest,broom,car,stargazer,sandwich,knitr,dplyr)
+search()
+theme_set(theme_classic())
+```
+```{r}
+df<-read_dta('ivreg2.dta')
+head(df)
+```
+
+**PART b**
+
+```{r}
+a=df$y
+b=df$x
+  
+e=a-3-b
+```
+
+```{r}
+cor(b,e)
+```
+
+
+**PART c**
+
+```{r}
+e_y=3+b
+ggplot(df,aes(x=a,y=b))+
+  geom_point()+
+  geom_smooth(method="lm")
+```
+
+**PART D**
+
+```{r}
+lmdata_1<- df %>% slice(1:10)
+lm_1<-lm(y~x,data=lmdata_1)
+summary(lm_1)
+```
+
+```{r}
+lmdata_2<- df %>% slice(1:20)
+lm_2<-lm(y~x,data=lmdata_2)
+summary(lm_2)
+```
+
+```{r}
+lmdata_3<- df %>% slice(1:100)
+lm_3<-lm(y~x,data=lmdata_3)
+summary(lm_3)
+```
+
+```{r}
+lmdata_4<- df %>% slice(1:500)
+lm_4<-lm(y~x,data=lmdata_4)
+summary(lm_4)
+```
+
+**PART e**
+
+```{r}
+df$e<-e
+cor(df)
+```
+**PART f**
+
+```{r}
+lmdata_1<- df %>% slice(1:10)
+lm_i1<-lm(x~z1,data=lmdata_1)
+x_fit<-fitted(lm_i1)
+sls_1<-lm(y~x_fit,data=lmdata_1)
+summary(sls_1)
+```
+
+```{r}
+lmdata_2<- df %>% slice(1:20)
+lm_i2<-lm(x~z1,data=lmdata_2)
+x_fit2<-fitted(lm_i2)
+sls_2<-lm(y~x_fit2,data=lmdata_2)
+summary(sls_2)
+```
+
+```{r}
+lmdata_3<- df %>% slice(1:100)
+lm_i3<-lm(x~z1,data=lmdata_3)
+x_fit3<-fitted(lm_i3)
+sls_3<-lm(y~x_fit3,data=lmdata_3)
+summary(sls_3)
+```
+
+```{r}
+lmdata_4<- df %>% slice(1:500)
+lm_i4<-lm(x~z1,data=lmdata_4)
+x_fit4<-fitted(lm_i4)
+sls_4<-lm(y~x_fit4,data=lmdata_4)
+summary(sls_4)
+```
+
+**PART g**
+
+```{r}
+lmdata_g1<- df %>% slice(1:10)
+lm_g1<-lm(x~z2,data=lmdata_g1)
+x_fitg1<-fitted(lm_g1)
+sls_g1<-lm(y~x_fitg1,data=lmdata_g1)
+summary(sls_g1)
+```
+
+```{r}
+lmdata_g2<- df %>% slice(1:20)
+lm_g2<-lm(x~z2,data=lmdata_g2)
+x_fitg2<-fitted(lm_g2)
+sls_g2<-lm(y~x_fitg2,data=lmdata_g2)
+summary(sls_g2)
+```
+
+```{r}
+lmdata_g3<- df %>% slice(1:100)
+lm_g3<-lm(x~z2,data=lmdata_g3)
+x_fitg3<-fitted(lm_g3)
+sls_g3<-lm(y~x_fitg3,data=lmdata_g3)
+summary(sls_g3)
+```
+
+```{r}
+lmdata_g4<- df %>% slice(1:500)
+lm_g4<-lm(x~z2,data=lmdata_g4)
+x_fitg4<-fitted(lm_g4)
+sls_g4<-lm(y~x_fitg4,data=lmdata_g4)
+summary(sls_g4)
+```
+**PART h**
+
+```{r}
+data_1<- df %>% slice(1:10)
+comb_1<-lm(x~z2+z1,data=data_1)
+fit_1<-fitted(comb_1)
+sls_lm1<-lm(y~fit_1,data=data_1)
+summary(sls_lm1)
+```
+
+```{r}
+data_2<- df %>% slice(1:20)
+comb_2<-lm(x~z2+z1,data=data_2)
+fit_2<-fitted(comb_2)
+sls_lm2<-lm(y~fit_2,data=data_2)
+summary(sls_lm2)
+```
+
+```{r}
+data_3<- df %>% slice(1:100)
+comb_3<-lm(x~z2+z1,data=data_3)
+fit_3<-fitted(comb_3)
+sls_lm3<-lm(y~fit_3,data=data_3)
+summary(sls_lm3)
+```
+
+```{r}
+data_4<- df %>% slice(1:500)
+comb_4<-lm(x~z2+z1,data=data_4)
+fit_4<-fitted(comb_4)
+sls_lm4<-lm(y~fit_4,data=data_4)
+summary(sls_lm4)
+```

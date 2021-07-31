@@ -1,0 +1,130 @@
+---
+title: "Assingment 9"
+author: "Chitresh Kumar"
+date: "4/12/2020"
+output:
+  word_document: default
+  html_document: default
+---
+
+```{r r loadPackages, warning=FALSE, message=FALSE, results='hide' }
+if(!require("pacman")) install.packages("pacman")
+pacman::p_load(tidyverse, reshape, gplots, ggmap, RStata,haven,plm,ivpanel,
+                data.table,margins,pastecs,MASS,lmtest,broom,car,stargazer,sandwich,knitr,dplyr)
+search()
+theme_set(theme_classic())
+```
+
+```{r}
+df<-read_dta('mexican.dta')
+head(df)
+```
+
+```{r}
+str(df)
+```
+
+```{r}
+names(df)
+```
+```{r}
+# estimate the fixed effects regression with plm()
+fe <- plm(lnprice ~ bar+street+nocondom+rich+regular+alcohol, 
+                    data = df,
+                    index = c("id","trans"), 
+                    model = "within")
+summary(fe)
+mean(fixef(fe))
+#summary(fixef(fe))
+```
+
+
+
+b)
+```{r}
+# estimate the random effects regression with plm()
+re <- plm(lnprice ~ bar+street+nocondom+rich+regular+alcohol+age+school+attractive, 
+                    data = df,
+                    index = c("id","trans"), 
+                    model = "random")
+summary(re)
+```
+
+```{r}
+phtest(fe, re)
+```
+
+
+
+#Question -15.10
+```{r}
+crime_df<-read_dta('crime.dta')
+head(crime_df)
+```
+
+```{r}
+names(crime_df)
+```
+
+```{r}
+lm <- lm(log(crmrte) ~ log(prbarr)+log(prbconv)+log(prbpris)+log(avgsen)+log(wmfg) , data=crime_df)
+summary(lm)
+```
+
+
+
+```{r}
+# estimate the fixed effects regression with plm()
+fe1 <- plm(log(crmrte) ~ log(prbarr)+log(prbconv)+log(prbpris)+log(avgsen)+log(wmfg), 
+                    data = crime_df,
+                    index = c("county","year"  ), 
+                    model = "within")
+summary(fe1)
+mean(fixef(fe1))
+```
+
+```{r}
+sum(fe1$residuals^2)
+```
+
+```{r}
+# estimate the fixed effects regression with plm()
+lm_u <- lm(log(crmrte) ~ log(prbarr)+log(prbconv)+log(prbpris)+log(avgsen)+log(wmfg)+county , 
+                    data = crime_df)
+summary(lm_u)
+sum(lm_u$residuals^2)
+```
+**PART e**
+#OLS
+```{r}
+lm3a<-lm(lcrmrte~lprbarr+lprbconv+lprbpris+lavgsen+lwmfg+ldensity+lpctymle+d82+d83+d84+d85+d86+d87,
+         data=crime_df)
+summary(lm3a)
+```
+```{r}
+lm3b<-lm(lcrmrte~lprbarr+lprbconv+lprbpris+lavgsen+lwmfg+ldensity+lpctymle,data=crime_df)
+summary(lm3b)
+```
+
+```{r}
+anova(lm3a,lm3b)
+```
+
+
+#Fixed effect
+```{r}
+lm4a<-plm(lcrmrte~lprbarr+lprbconv+lprbpris+lavgsen+lwmfg+ldensity+lpctymle+d82+d83+d84+d85+d86+d87,
+          data=crime_df,model='within')
+summary(lm4a)
+```
+
+
+```{r}
+lm4b<-plm(lcrmrte~lprbarr+lprbconv+lprbpris+lavgsen+lwmfg+ldensity+lpctymle,data=crime_df,model='within')
+summary(lm4b)
+```
+
+
+```{r}
+pFtest(lm4a,lm4b)
+```

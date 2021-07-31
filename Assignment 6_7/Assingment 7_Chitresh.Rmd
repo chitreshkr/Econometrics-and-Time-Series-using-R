@@ -1,0 +1,65 @@
+---
+title: "Assignment 8"
+author: "Chitresh Kumar"
+output:
+  word_document: default
+  html_document: default
+---
+
+```{r loadPackages, warning=FALSE, message=FALSE, results='hide' }
+if(!require("pacman")) install.packages("pacman")
+pacman::p_load(tidyverse, reshape, gplots, ggmap, RStata,haven,
+                data.table,margins,pastecs,MASS,lmtest,broom,car,stargazer,sandwich,knitr)
+search()
+theme_set(theme_classic())
+```
+```{r}
+pub<-read_dta('pubexp.dta')
+head(pub)
+```
+
+**PART b**
+```{r}
+EE<-pub$ee/pub$p
+GDP<-pub$gdp/pub$p
+lm1<-lm(EE~GDP,data=pub)
+summary(lm1)
+```
+
+```{r}
+rs<-resid(lm1)
+plot(EE,rs)
+plot(lm1)
+```
+
+**PART c**
+
+```{r}
+ressq<-rs^2
+GDP_S<-GDP^2
+lm2<-lm(ressq~GDP+GDP_S,data=pub)
+glm2<-glance(lm2)
+Rsq<-glm2$r.squared
+chisq<-34*Rsq
+pval<-1-pchisq(chisq,1)
+print(chisq)
+print(pval)
+```
+
+**PART d**
+
+```{r}
+cov1 <- hccm(lm1, type="hc1")
+pub.HC1 <- coeftest(lm1, vcov.=cov1)
+kable(tidy(pub.HC1))
+```
+
+**PART e**
+
+```{r}
+w<-1/GDP
+lmwls<-lm(EE~GDP,weights=w,data=pub)
+summary(lmwls)
+
+```
+

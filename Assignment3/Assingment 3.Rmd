@@ -1,0 +1,41 @@
+---
+title: "Assignment 3"
+author: "Chitresh Kumar"
+output:
+  word_document: default
+  html_document: default
+---
+
+```{r loadPackages, warning=FALSE, message=FALSE, results='hide' }
+#if(!require("pacman")) install.packages("pacman")
+pacman::p_load(tidyverse, reshape, gplots, RStata,haven)
+theme_set(theme_classic())
+options("RStata.StataPath")
+options("RStata.StataVersion" = 13)
+```
+
+
+
+```{r}
+insur<- read_dta(file = "insur.dta")
+```
+
+
+```{r}
+head(insur)
+```
+
+```{r}
+lm1<- lm(insur$insurance~ insur$income,data=insur)
+summary(lm1)
+mean(insur$insurance)
+
+```
+```{r}
+ggplot(insur,aes(x=insur$income,y=insur$insurance))+
+  geom_point()+
+  geom_hline(yintercept=236.95)+
+  geom_smooth(method="lm")
+  
+```
+

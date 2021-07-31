@@ -1,0 +1,105 @@
+---
+author: "Chitresh"
+title: "Assignment 2"
+date: "2/7/2020"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r loadPackages, warning=FALSE, message=FALSE, results='hide' }
+if(!require("pacman")) install.packages("pacman")
+pacman::p_load(tidyverse,  gplots, ggmap, RStata,haven)
+theme_set(theme_classic())
+```
+
+## R Markdown
+
+
+
+```{r}
+options("RStata.StataPath")
+options("RStata.StataVersion" = 13)
+data<- read_dta(file = "capm4.dta")
+data
+```
+
+```  LINEAR MODELS ```
+
+
+````{r}
+lm1<- lm((dis-riskfree) ~ (mkt-riskfree),data=data)
+lm2<- lm((ge-riskfree) ~ (mkt-riskfree),data=data)
+lm3<- lm((gm-riskfree) ~ (mkt-riskfree),data=data)
+lm4<- lm((ibm-riskfree) ~ (mkt-riskfree),data=data)
+lm5<- lm((msft-riskfree) ~ (mkt-riskfree),data=data)
+lm6<- lm((xom-riskfree) ~ (mkt-riskfree),data=data)
+lm1
+lm2
+lm3
+lm4
+lm5
+lm6
+
+````
+``` SCATTER PLOT FOR MICROSOFT ```
+
+````{r}
+ggplot(data,aes(x=(mkt-riskfree),y=(msft-riskfree)))+
+geom_point()+
+geom_smooth(method='lm')
+`````
+
+
+
+```When INTERCEPT =0```
+
+````{r}
+in0_1 <- lm((dis-riskfree) ~ 0+ (mkt-riskfree),data=data)
+in0_2 <- lm((ge-riskfree) ~ 0+ (mkt-riskfree),data=data)
+
+in0_3 <- lm((gm-riskfree) ~ 0+(mkt-riskfree),data=data)
+in0_4<- lm((ibm-riskfree) ~ 0+(mkt-riskfree),data=data)
+
+in0_5<- lm((msft-riskfree) ~ 0+(mkt-riskfree),data=data)
+
+in0_6<- lm((xom-riskfree) ~ 0+(mkt-riskfree),data=data)
+in0_1
+in0_2
+in0_3
+in0_4
+in0_5
+in0_6
+````
+
+
+```Question 14)```
+```{r}
+fair<- read_dta(file = "fair4.dta")
+fair
+```
+
+
+``` SCATTER PLOT```
+
+```{r}
+ggplot(fair,aes(x=growth,y=vote))+
+  geom_point()+
+  geom_smooth(method='lm')
+```
+##REGRESSION
+
+````{r}
+lm1<- lm(vote ~ growth,data=fair)
+lm1
+````
+## VOTE vs INFLATION
+````{r}
+ggplot(fair,aes(x=inflation,y=vote))+
+  geom_point()+
+  geom_smooth(method='lm')
+`````
+````{r}
+lm2<- lm(vote ~ inflation,data=fair)
+lm2
+````

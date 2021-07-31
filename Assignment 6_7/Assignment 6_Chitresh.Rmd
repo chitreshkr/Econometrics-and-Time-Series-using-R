@@ -1,0 +1,117 @@
+---
+title: "Assignment 7"
+author: "Chitresh KUmar"
+output:
+  word_document: default
+  html_document: default
+  pdf_document: default
+---
+
+```{r loadPackages, warning=FALSE, message=FALSE, results='hide' }
+if(!require("pacman")) install.packages("pacman")
+pacman::p_load(tidyverse, reshape, gplots, ggmap, RStata,haven,
+                data.table,margins,pastecs,MASS,tinytex)
+search()
+theme_set(theme_light())
+```
+```{r}
+#getwd()
+br<-read_dta('br2.dta')
+head(br)
+```
+## PART A
+
+
+````{r}
+options(scipen = 1)
+summary(br)
+stat.desc(br)
+```
+*HISTOGRAM OF PRICE*
+
+```{r,warning=False,message=False}
+ggplot(data=br, aes(x=br$price)) + 
+  geom_histogram(color='black', fill='blue')
+```
+
+**PART B**
+
+```{r}
+PRICE=br$price/1000
+SQFT=br$sqft/100
+lm_b<-lm(log(PRICE)~SQFT+age+bedrooms+baths+owner+pool+traditional+fireplace+waterfront,data=br)
+summary(lm_b)
+```
+
+**PART C**
+
+```{r}
+lm_c<-lm(log(PRICE)~SQFT+age+bedrooms+baths+owner+pool+traditional+fireplace+waterfront+waterfront : traditional ,data=br)
+summary(lm_c)
+```
+
+  **PART D**
+  
+````{r}
+lm_d1<-lm(log(PRICE)~SQFT+age+bedrooms+baths+owner+pool+fireplace+waterfront,data=br)
+summary(lm_d1)
+``` 
+````{r}
+lm_d2<-lm(log(PRICE)~SQFT+age+bedrooms+baths+owner+pool+fireplace+waterfront+traditional+SQFT:traditional+age:traditional+bedrooms:traditional+baths :traditional+ owner:traditional+pool:traditional+fireplace:traditional+waterfront:traditional,data=br)
+summary(lm_d2)
+```
+
+```{r}
+anova(lm_d1,lm_d2)
+```
+
+
+#Question 7.16 
+
+```{r}
+stck<-read_dta('stckton4.dta')
+head(stck)
+```
+**PART a**
+#Histogram
+```{r,,warning=False,message=False}
+ggplot(data=stck, aes(x=stck$sprice)) + 
+  geom_histogram(color="black", fill="blue")
+```
+#Histogram of Log(price)
+```{r code for Histogram,warning=False,message=False}
+ln_price<-log(stck$sprice)
+ggplot(data=stck, aes(x=ln_price)) + 
+  geom_histogram(color="black", fill="blue")
+```
+
+**PART b**
+
+```{r code for prediction}
+PRICE<-stck$sprice/1000
+lm_b<-lm(log(PRICE)~livarea+beds+baths+age+lgelot+pool,data=stck)
+summary(lm_b)
+```
+
+**PART d**
+
+```{r}
+lm_d<-lm(log(PRICE)~livarea+beds+baths+age+lgelot+pool+lgelot:livarea,data=stck)
+summary(lm_d)
+```
+
+**PART e**
+
+```{r}
+#Restricted Model
+lm_e1<-lm(log(PRICE)~livarea+beds+baths+age+pool,data=stck)
+summary(lm_e1)
+```
+```{r}
+#Unrestricted model
+lm_e2<-lm(log(PRICE)~livarea+beds+baths+age+lgelot+pool+lgelot:livarea+lgelot:beds+lgelot:baths+lgelot:age+lgelot:pool,data=stck)
+summary(lm_e2)
+```
+```{r}
+anova(lm_e1,lm_e2)
+```
